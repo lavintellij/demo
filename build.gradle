@@ -23,10 +23,41 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    alpha {
+    }
+}
+
+sourceSets {
+    main {
+        compileClasspath += alpha.output
+    }
+    test {
+        compileClasspath += alpha.output
+    }
+}
+
+configurations {
+    //both extends from implementation and compile work, (api does not)
+    //implementation is more precise than compile because compile is deprecated
+    alphaCompile.extendsFrom compile
+}
+
+
+jar {
+    from sourceSets.alpha.output
+}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter')
     compile('org.codehaus.groovy:groovy')
     compile 'org.springframework.boot:spring-boot-starter-web'
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    //spock
+    compile "org.codehaus.groovy:groovy-all:2.4.15"
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+
+//    compile sourceSets.alpha.output
 }
+
